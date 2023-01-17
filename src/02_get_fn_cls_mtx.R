@@ -3,16 +3,7 @@ gff3File = "hBak_seg_genome_14122022.gff3"
 ann = import(gff3File)
 files = list.files(pattern = ".*.mapped.Rds$")
 libs = lapply(files, readRDS)
-files = sub("WIP", "IP", files)
-files = sub("unbound", "Ub", files)
-files = sub("mono|mp", "monoP", files)
-files = sub("poly|pp", "polyP", files)
-files = sub("Hb_adult", "Adult_total", files)
-files = sub("Hb_vesicle", "EV_total", files)
 names(libs) = files
-
-
-
 
 get_fn_mtx = function(x){
   lib  = subset(x, seqnames(x) != "MtDNA")
