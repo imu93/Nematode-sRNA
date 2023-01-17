@@ -8,7 +8,7 @@ outfiles = sub("mono|mp", "monoP", outfiles)
 outfiles = sub("poly|pp", "polyP", outfiles)
 outfiles = sub("Hb_adult", "Adult_total", outfiles)
 outfiles = sub("Hb_vesicle", "EV_total", outfiles)
-file.rename(from_files,to_files)
+file.rename(from_files,outfiles)
 
 what_to_extract = c("rname", "pos", "qwidth", "strand", "flag", "seq", "qname")
 bams = list.files(pattern = ".*trim.bam$")
