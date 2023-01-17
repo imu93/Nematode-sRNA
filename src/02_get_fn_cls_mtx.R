@@ -14,11 +14,13 @@ get_fn_mtx = function(x){
   counts = as.data.frame(do.call(rbind, lis))
   return(counts)
 }
+
+
 get_cls_mtx = function(lib) {
   rs_lib = resize(lib, 1, "center")
   cls_lib =  mergeByOverlaps(rs_lib, ann)
   cls_lib$n_type = "Other"
-  cls_lib$n_type = ifelse(grepl("exon_As|intron_As", cls_lib$ID), "gene_As", cls_lib$n_type)
+  cls_lib$n_type = ifelse(grepl("exons_As|introns_As", cls_lib$ID), "Gene_As", cls_lib$n_type)
   cls_lib$n_type = ifelse(grepl("DNA.*_AS|RC.*_As", cls_lib$ID), "Transposon_As", cls_lib$n_type)
   cls_lib$n_type = ifelse(grepl("LINE.*_As|SINE.*_As|LTR.*_As", cls_lib$ID), "Retrotransposon_As", cls_lib$n_type)
   cls_lib$n_type = ifelse(grepl("Unk", cls_lib$ID), "Unknown", cls_lib$n_type)
@@ -39,8 +41,28 @@ get_cls_mtx = function(lib) {
   return(mtx_ed)
 }
 
+
+fil_cls_mtx = function(x){
+  cats = c("Gene_As", "Transposon_As", "Retrotransposon_As", "Unknown", "Other_repeats",
+           "miRNA", "rRNA", "tRNA", "yRNA", "Other_ncRNA", "Intergenic", "Other")
+  l = x
+  ns = setdiff(cats, colnames(l))
+  if (identical(ns, character(0))) {
+      return(l)
+  }else{
+      vs =  t(matrix(0, length(ns), nrow(l)))
+      colnames(vs) =  ns
+      rownames(vs) = rownames(l)
+      l = cbind(l, vs)
+      l =  l[,cats]
+      return(l)  
+  }
+  }
+
 cls_mtx =  lapply(libs, get_cls_mtx)
+cls_mtx = lapply(cls_mtx, fil_cls_mtx)
 fn_mtx = lapply(libs, get_fn_mtx)
-lst = c(fn_mtx,cls_mtx)
+lst = list(fn_mtx,cls_mtx)
 saveRDS(lst, "Hb_libs_fn_cls_mtx.R")
+
 
