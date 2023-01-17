@@ -1,6 +1,9 @@
 pacman::p_load(rtracklayer, Rsamtools)
 
 system('samtools split -f %!.%. -@ 20 -v merged_alignments.bam')
+system('for file in *trim.bam ; do outFile=$(echo $file| sed "s|.trim.bam|.trim.mapped.bam|"); samtools view -F 4  -b -@ 20 $file > $outFile; done')
+system('rm -rf *.trim.bam')
+
 infiles = list.files(pattern = ".*trim.bam$")
 outfiles = sub("WIP", "IP", infiles)
 outfiles = sub("unbound", "Ub", outfiles)
