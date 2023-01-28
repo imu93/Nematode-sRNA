@@ -20,18 +20,17 @@ get_cls_mtx = function(lib) {
   rs_lib = resize(lib, 1, "center")
   cls_lib =  mergeByOverlaps(rs_lib, ann)
   cls_lib$n_type = "Other"
-  cls_lib$n_type = ifelse(grepl("exons_As|introns_As", cls_lib$ID), "Gene_As", cls_lib$n_type)
-  cls_lib$n_type = ifelse(grepl("DNA.*_AS|RC.*_As", cls_lib$ID), "Transposon_As", cls_lib$n_type)
-  cls_lib$n_type = ifelse(grepl("LINE.*_As|SINE.*_As|LTR.*_As", cls_lib$ID), "Retrotransposon_As", cls_lib$n_type)
+  cls_lib$n_type = ifelse(grepl("exons|introns", cls_lib$ID), "Gene", cls_lib$n_type)
+  cls_lib$n_type = ifelse(grepl("DNA|RC", cls_lib$ID), "Transposon", cls_lib$n_type)
+  cls_lib$n_type = ifelse(grepl("LINE|SINE.*_As|LTR", cls_lib$ID), "Retrotransposon", cls_lib$n_type)
   cls_lib$n_type = ifelse(grepl("Unk", cls_lib$ID), "Unknown", cls_lib$n_type)
   cls_lib$n_type = ifelse(grepl("Sat|Low|Simple", cls_lib$ID), "Other_repeats", cls_lib$n_type)
-  cls_lib$n_type = ifelse(grepl("miRNA_S", cls_lib$ID), "miRNA", cls_lib$n_type)
-  cls_lib$n_type = ifelse(grepl("rRNA_S", cls_lib$ID), "rRNA", cls_lib$n_type)
-  cls_lib$n_type = ifelse(grepl("tRNA_S", cls_lib$ID), "tRNA", cls_lib$n_type)
-  cls_lib$n_type = ifelse(grepl("yRNA_S", cls_lib$ID), "yRNA", cls_lib$n_type)
-  cls_lib$n_type = ifelse(grepl("piRNA_S|snoRNA_S|snRNA_S|other_ncRNA_S", cls_lib$ID), "Other_ncRNA", cls_lib$n_type)
+  cls_lib$n_type = ifelse(grepl("miRNA", cls_lib$ID), "miRNA", cls_lib$n_type)
+  cls_lib$n_type = ifelse(grepl("rRNA", cls_lib$ID), "rRNA", cls_lib$n_type)
+  cls_lib$n_type = ifelse(grepl("tRNA", cls_lib$ID), "tRNA", cls_lib$n_type)
+  cls_lib$n_type = ifelse(grepl("yRNA", cls_lib$ID), "yRNA", cls_lib$n_type)
+  cls_lib$n_type = ifelse(grepl("piRNA|snoRNA|snRNA|other_ncRNA", cls_lib$ID), "Other_ncRNA", cls_lib$n_type)
   cls_lib$n_type = ifelse(grepl("inter", cls_lib$ID), "Intergenic", cls_lib$n_type)
-  cls_lib$n_type = ifelse(grepl("exon_S|intron_S|DNA.*_S|RC.*_S|LINE.*_S|SINE.*_S|LTR.*_S|miRNA_As|rRNA_As|tRNA_As|yRNA_As|piRNA_As|snoRNA_As|snRNA_As|other_ncRNA_As", cls_lib$ID), "Other", cls_lib$n_type)
   cls_lib$n_type = factor(cls_lib$n_type)
   len_lib = split(cls_lib, lib$len)
   cls_len = lapply(len_lib, function(x){table(x$n_type)})
@@ -43,8 +42,8 @@ get_cls_mtx = function(lib) {
 
 
 fil_cls_mtx = function(x){
-  cats = c("Gene_As", "Transposon_As", "Retrotransposon_As", "Unknown", "Other_repeats",
-           "miRNA", "rRNA", "tRNA", "yRNA", "Other_ncRNA", "Intergenic", "Other")
+  cats = c("Gene", "Transposon", "Retrotransposon", "Unknown", "Other_repeats",
+           "miRNA", "rRNA", "tRNA", "yRNA", "Other_ncRNA", "Intergenic")
   l = x
   ns = setdiff(cats, colnames(l))
   if (identical(ns, character(0))) {
